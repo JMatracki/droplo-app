@@ -1,12 +1,13 @@
 import Image from 'next/image'
-import plusIcon from '../icons/plus-circle.svg'
-import { Button } from './Button'
+import plusIcon from '@/icons/plus-circle.svg'
+import { Button } from '../Button'
+import { IOpenForm } from '@/types/form'
 
 interface IEmptyMenuProps {
-    setShowAddMenuItemForm: React.Dispatch<React.SetStateAction<boolean>>
+    openForm: IOpenForm
 }
 
-const EmptyMenu = ({ setShowAddMenuItemForm }: IEmptyMenuProps) => {
+const EmptyMenu = ({ openForm }: IEmptyMenuProps) => {
     return (
         <div className="flex w-full flex-col items-center justify-center gap-6 rounded-lg border py-10 text-center">
             <div>
@@ -20,7 +21,7 @@ const EmptyMenu = ({ setShowAddMenuItemForm }: IEmptyMenuProps) => {
             <Button
                 variant={'primary'}
                 onClick={() => {
-                    setShowAddMenuItemForm(true)
+                    openForm({ parentId: null })
                 }}
             >
                 <Image src={plusIcon} alt="plus icon" />

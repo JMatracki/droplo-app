@@ -1,12 +1,12 @@
 import Image from 'next/image'
 import React from 'react'
-import searchIcon from '../icons/search-lg.svg'
+import searchIcon from '@/icons/search-lg.svg'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import { Button } from './Button'
+import { Button } from '../Button'
 import { z } from 'zod'
-import { IMenuFormFields } from './MenuItems'
 import { v4 as uuidv4 } from 'uuid'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { ICloseForm, IFormState, IMenuFormFields } from '@/types/form'
 
 export const AddMenuItemFormSchema = z.object({
     name: z.string().min(1, { message: 'Nazwa jest wymagana' }),
@@ -16,17 +16,15 @@ export const AddMenuItemFormSchema = z.object({
 export type AddMenuFormFields = z.infer<typeof AddMenuItemFormSchema>
 
 interface IAddMenuItemFormProps {
-    parentId: string | null
-    showAddMenuItemForm: boolean
+    formState: IFormState
     addMenuItem: (newItem: IMenuFormFields, parentId: string | null) => void
-    setShowAddMenuItemForm: React.Dispatch<React.SetStateAction<boolean>>
+    closeForm: ICloseForm
 }
 
 const AddMenuItemForm = ({
-    parentId,
+    formState,
     addMenuItem,
-    showAddMenuItemForm,
-    setShowAddMenuItemForm,
+    closeForm,
 }: IAddMenuItemFormProps) => {
     const {
         register,
@@ -48,13 +46,13 @@ const AddMenuItemForm = ({
             subLinks: [],
         }
 
-        addMenuItem(newItem, parentId)
-        setShowAddMenuItemForm(false)
+        addMenuItem(newItem, formState.parentId)
+        closeForm()
     }
 
     return (
         <>
-            {showAddMenuItemForm && (
+            {formState.isVisible && (
                 <form
                     className="flex w-full flex-col gap-1 rounded-md border p-4 shadow-md"
                     onSubmit={handleSubmit(onSubmit)}
@@ -98,10 +96,7 @@ const AddMenuItemForm = ({
                     </div>
 
                     <div className="flex w-full gap-4">
-                        <Button
-                            type="button"
-                            onClick={() => setShowAddMenuItemForm(false)}
-                        >
+                        <Button type="button" onClick={() => closeForm()}>
                             Anuluj
                         </Button>
                         <Button variant={'secondary'}>Dodaj</Button>

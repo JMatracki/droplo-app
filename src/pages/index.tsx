@@ -1,10 +1,13 @@
-import { IMenuFormFields, MenuItems } from '@/components/MenuItems'
+import { IMenuFormFields, MenuItems } from '@/components/Menu/MenuItems'
+import { addItemToMenu } from '@/utils/menuUtils'
 import { useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 
 export default function Home() {
-    const [showAddMenuItemForm, setShowAddMenuItemForm] = useState(false)
-    const [currentParentId, setCurrentParentId] = useState<string | null>(null)
+    const [formState, setFormState] = useState<{
+        isVisible: boolean
+        parentId: string | null
+    }>({ isVisible: false, parentId: null })
     const [menuItems, setMenuItems] = useState<IMenuFormFields[]>([
         {
             id: uuidv4(),
@@ -37,37 +40,16 @@ export default function Home() {
         },
     ])
 
-    const addMenuItem = (
-        newItem: IMenuFormFields,
-        parentId?: string | null
-    ) => {
-        setMenuItems((prevItems) => {
-            const addItemRecursively = (
-                items: IMenuFormFields[]
-            ): IMenuFormFields[] => {
-                return items.map((item) => {
-                    if (item.id === parentId) {
-                        return {
-                            ...item,
-                            subLinks: [...(item.subLinks || []), newItem],
-                        }
-                    }
-                    if (item.subLinks) {
-                        return {
-                            ...item,
-                            subLinks: addItemRecursively(item.subLinks),
-                        }
-                    }
-                    return item
-                })
-            }
+    const addMenuItem = (newItem: IMenuFormFields, parentId: string | null) => {
+        setMenuItems((prevItems) => addItemToMenu(prevItems, newItem, parentId))
+    }
 
-            if (!parentId) {
-                return [...prevItems, newItem]
-            }
+    const openForm = ({ parentId }: { parentId: string | null }) => {
+        setFormState({ isVisible: true, parentId })
+    }
 
-            return addItemRecursively(prevItems)
-        })
+    const closeForm = () => {
+        setFormState({ isVisible: false, parentId: null })
     }
 
     return (
@@ -77,10 +59,9 @@ export default function Home() {
             <main className="row-start-2 flex w-full flex-col items-center gap-8 sm:items-start">
                 <MenuItems
                     menuItems={menuItems}
-                    setShowAddMenuItemForm={setShowAddMenuItemForm}
-                    currentParentId={currentParentId}
-                    setCurrentParentId={setCurrentParentId}
-                    showAddMenuItemForm={showAddMenuItemForm}
+                    openForm={openForm}
+                    formState={formState}
+                    closeForm={closeForm}
                     addMenuItem={addMenuItem}
                 />
             </main>
