@@ -1,10 +1,41 @@
 import AddMenuItemForm from '@/components/AddMenuItemForm'
 import { IMenuFormFields, MenuItems } from '@/components/MenuItems'
 import { useState } from 'react'
+import { v4 as uuidv4 } from 'uuid'
 
 export default function Home() {
     const [showAddMenuItemForm, setShowAddMenuItemForm] = useState(false)
-    const [menuItems, setMenuItems] = useState<IMenuFormFields[]>([])
+    const [menuItems, setMenuItems] = useState<IMenuFormFields[]>([
+        {
+            id: uuidv4(),
+            name: 'Promocje',
+            url: 'https://rc32141.redcart.pl/promocje',
+            subLinks: [
+                {
+                    id: uuidv4(),
+                    name: 'Ostatnie 7 dni',
+                    url: 'https://rc32141.redcart.pl/7dni',
+                    subLinks: [
+                        {
+                            id: uuidv4(),
+                            name: 'Popularne',
+                            url: 'https://rc32141.redcart.pl/popularne',
+                        },
+                        {
+                            id: uuidv4(),
+                            name: 'Najlepsze',
+                            url: 'https://rc32141.redcart.pl/najlepsze',
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            id: uuidv4(),
+            name: 'Diamenty forbesa',
+            url: 'https://www.forbes.pl/diamenty',
+        },
+    ])
 
     const addMenuItem = (
         newItem: IMenuFormFields,
