@@ -15,6 +15,7 @@ const MenuItem = ({
     openForm,
     closeForm,
     addMenuItem,
+    deleteMenuItem,
 }: MenuItemProps) => {
     return (
         <div className={`${className}`}>
@@ -34,7 +35,12 @@ const MenuItem = ({
                                 </div>
                             </div>
                             <div className="w-fil h-fit rounded-lg border">
-                                <Button className="border-none">Usuń</Button>
+                                <Button
+                                    className="border-none"
+                                    onClick={() => deleteMenuItem(item.id)}
+                                >
+                                    Usuń
+                                </Button>
                                 <Button className="rounded-l-none rounded-r-none border-b-0 border-t-0 focus-within:rounded-lg">
                                     Edytuj
                                 </Button>
@@ -59,6 +65,7 @@ const MenuItem = ({
                                     openForm={openForm}
                                     closeForm={closeForm}
                                     addMenuItem={addMenuItem}
+                                    deleteMenuItem={deleteMenuItem}
                                     className="pl-16"
                                 />
                             </div>

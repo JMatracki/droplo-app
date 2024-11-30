@@ -1,4 +1,4 @@
-import { IMenuFormFields } from '@/components/Menu/MenuItems'
+import { IMenuFormFields } from '@/types/form'
 
 export const addItemToMenu = (
     items: IMenuFormFields[],
@@ -26,4 +26,18 @@ export const addItemToMenu = (
 
         return item
     })
+}
+
+export const deleteItemFromMenu = (
+    items: IMenuFormFields[],
+    itemId: string
+): IMenuFormFields[] => {
+    return items
+        .filter((item) => item.id !== itemId)
+        .map((item) => ({
+            ...item,
+            subLinks: item.subLinks
+                ? deleteItemFromMenu(item.subLinks, itemId)
+                : [],
+        }))
 }

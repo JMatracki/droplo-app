@@ -15,5 +15,7 @@ export interface IMenuFormFields {
 
 export type IAddMenuItem = (
     newItem: IMenuFormFields,
-    parentId?: string | null
+    parentId: string | null
 ) => void
+
+export type IDeleteMenuItem = (itemId: string) => void

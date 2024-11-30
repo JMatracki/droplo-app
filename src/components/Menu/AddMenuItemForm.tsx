@@ -54,7 +54,7 @@ const AddMenuItemForm = ({
         <>
             {formState.isVisible && (
                 <form
-                    className="flex w-full flex-col gap-1 rounded-md border p-4 shadow-md"
+                    className="mb-6 flex w-full flex-col gap-1 rounded-md border p-4 shadow-md"
                     onSubmit={handleSubmit(onSubmit)}
                 >
                     <div>

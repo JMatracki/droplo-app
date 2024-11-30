@@ -9,7 +9,7 @@ interface IEmptyMenuProps {
 
 const EmptyMenu = ({ openForm }: IEmptyMenuProps) => {
     return (
-        <div className="flex w-full flex-col items-center justify-center gap-6 rounded-lg border py-10 text-center">
+        <div className="flex w-full flex-col items-center justify-center gap-6 rounded-lg py-10 text-center">
             <div>
                 <h2 className="text-lg font-bold text-gray-800">
                     Menu jest puste

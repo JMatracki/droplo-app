@@ -1,5 +1,6 @@
-import { IMenuFormFields, MenuItems } from '@/components/Menu/MenuItems'
-import { addItemToMenu } from '@/utils/menuUtils'
+import { MenuItems } from '@/components/Menu/MenuItems'
+import { IMenuFormFields } from '@/types/form'
+import { addItemToMenu, deleteItemFromMenu } from '@/utils/menuUtils'
 import { useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -44,6 +45,10 @@ export default function Home() {
         setMenuItems((prevItems) => addItemToMenu(prevItems, newItem, parentId))
     }
 
+    const deleteMenuItem = (itemId: string) => {
+        setMenuItems((prevItems) => deleteItemFromMenu(prevItems, itemId))
+    }
+
     const openForm = ({ parentId }: { parentId: string | null }) => {
         setFormState({ isVisible: true, parentId })
     }
@@ -63,6 +68,7 @@ export default function Home() {
                     formState={formState}
                     closeForm={closeForm}
                     addMenuItem={addMenuItem}
+                    deleteMenuItem={deleteMenuItem}
                 />
             </main>
         </div>
