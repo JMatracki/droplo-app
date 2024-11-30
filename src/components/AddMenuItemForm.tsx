@@ -18,7 +18,7 @@ export type AddMenuFormFields = z.infer<typeof AddMenuItemFormSchema>
 interface IAddMenuItemFormProps {
     parentId: string | null
     showAddMenuItemForm: boolean
-    addMenuItem: (newItem: IMenuFormFields, parentId?: string | null) => void
+    addMenuItem: (newItem: IMenuFormFields, parentId: string | null) => void
     setShowAddMenuItemForm: React.Dispatch<React.SetStateAction<boolean>>
 }
 
@@ -39,8 +39,6 @@ const AddMenuItemForm = ({
             url: '',
         },
     })
-
-    console.log(errors)
 
     const onSubmit: SubmitHandler<AddMenuFormFields> = (data) => {
         const newItem = {

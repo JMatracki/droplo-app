@@ -1,10 +1,10 @@
-import AddMenuItemForm from '@/components/AddMenuItemForm'
 import { IMenuFormFields, MenuItems } from '@/components/MenuItems'
 import { useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 
 export default function Home() {
     const [showAddMenuItemForm, setShowAddMenuItemForm] = useState(false)
+    const [currentParentId, setCurrentParentId] = useState<string | null>(null)
     const [menuItems, setMenuItems] = useState<IMenuFormFields[]>([
         {
             id: uuidv4(),
@@ -39,7 +39,7 @@ export default function Home() {
 
     const addMenuItem = (
         newItem: IMenuFormFields,
-        parentId: string | null = null
+        parentId?: string | null
     ) => {
         setMenuItems((prevItems) => {
             const addItemRecursively = (
@@ -62,7 +62,7 @@ export default function Home() {
                 })
             }
 
-            if (parentId === null) {
+            if (!parentId) {
                 return [...prevItems, newItem]
             }
 
@@ -78,12 +78,10 @@ export default function Home() {
                 <MenuItems
                     menuItems={menuItems}
                     setShowAddMenuItemForm={setShowAddMenuItemForm}
-                />
-                <AddMenuItemForm
-                    parentId={null}
-                    addMenuItem={addMenuItem}
+                    currentParentId={currentParentId}
+                    setCurrentParentId={setCurrentParentId}
                     showAddMenuItemForm={showAddMenuItemForm}
-                    setShowAddMenuItemForm={setShowAddMenuItemForm}
+                    addMenuItem={addMenuItem}
                 />
             </main>
         </div>

@@ -3,6 +3,7 @@ import EmptyMenu from './EmptyMenu'
 import Image from 'next/image'
 import searchIcon from '../icons/search-lg.svg'
 import { Button } from './Button'
+import AddMenuItemForm from './AddMenuItemForm'
 
 export interface IMenuFormFields {
     id: string
@@ -14,17 +15,32 @@ export interface IMenuFormFields {
 interface MenuItemsProps {
     menuItems: IMenuFormFields[]
     setShowAddMenuItemForm: React.Dispatch<React.SetStateAction<boolean>>
+    currentParentId: string | null
+    setCurrentParentId: React.Dispatch<React.SetStateAction<string | null>>
+    showAddMenuItemForm: boolean
+    addMenuItem: (newItem: IMenuFormFields, parentId?: string | null) => void
 }
 
-interface MenuItemProps {
+interface MenuItemProps extends MenuItemsProps {
     menuItems: IMenuFormFields[]
     className?: string
 }
 
-const MenuItem = ({ menuItems, className }: MenuItemProps) => {
+const MenuItem = ({
+    menuItems,
+    className,
+    setShowAddMenuItemForm,
+    currentParentId,
+    setCurrentParentId,
+    showAddMenuItemForm,
+    addMenuItem,
+}: MenuItemProps) => {
     return (
         <div className={`${className}`}>
             {menuItems.map((item) => {
+                const isFormVisible =
+                    currentParentId === item.id && showAddMenuItemForm
+
                 return (
                     <div key={item.name}>
                         <div className="flex justify-between py-4">
@@ -41,10 +57,16 @@ const MenuItem = ({ menuItems, className }: MenuItemProps) => {
                             </div>
                             <div className="w-fil h-fit rounded-lg border">
                                 <Button className="border-none">Usuń</Button>
-                                <Button className="rounded-l-none rounded-r-none border-b-0 border-t-0">
+                                <Button className="rounded-l-none rounded-r-none border-b-0 border-t-0 focus-within:rounded-lg">
                                     Edytuj
                                 </Button>
-                                <Button className="border-none">
+                                <Button
+                                    className="border-none"
+                                    onClick={() => {
+                                        setCurrentParentId(item.id)
+                                        setShowAddMenuItemForm(true)
+                                    }}
+                                >
                                     Dodaj pozycję menu
                                 </Button>
                             </div>
@@ -55,9 +77,25 @@ const MenuItem = ({ menuItems, className }: MenuItemProps) => {
                                     key={item.name}
                                     menuItems={item.subLinks}
                                     className="pl-16"
+                                    setShowAddMenuItemForm={
+                                        setShowAddMenuItemForm
+                                    }
+                                    currentParentId={currentParentId}
+                                    setCurrentParentId={setCurrentParentId}
+                                    showAddMenuItemForm={showAddMenuItemForm}
+                                    addMenuItem={addMenuItem}
                                 />
                             </div>
                         ) : null}
+
+                        {isFormVisible && (
+                            <AddMenuItemForm
+                                parentId={item.id}
+                                addMenuItem={addMenuItem}
+                                showAddMenuItemForm={showAddMenuItemForm}
+                                setShowAddMenuItemForm={setShowAddMenuItemForm}
+                            />
+                        )}
                     </div>
                 )
             })}
@@ -68,21 +106,43 @@ const MenuItem = ({ menuItems, className }: MenuItemProps) => {
 export const MenuItems = ({
     menuItems,
     setShowAddMenuItemForm,
+    currentParentId,
+    setCurrentParentId,
+    showAddMenuItemForm,
+    addMenuItem,
 }: MenuItemsProps) => {
-    console.log(menuItems)
     return (
         <div className="flex w-full flex-col gap-6 rounded-lg border px-8 pb-4 pt-1">
             {menuItems.length > 0 ? (
-                <MenuItem menuItems={menuItems} />
+                <MenuItem
+                    menuItems={menuItems}
+                    setShowAddMenuItemForm={setShowAddMenuItemForm}
+                    currentParentId={currentParentId}
+                    setCurrentParentId={setCurrentParentId}
+                    showAddMenuItemForm={showAddMenuItemForm}
+                    addMenuItem={addMenuItem}
+                />
             ) : (
                 <EmptyMenu setShowAddMenuItemForm={setShowAddMenuItemForm} />
             )}
-            <Button
-                className="w-fit"
-                onClick={() => setShowAddMenuItemForm(true)}
-            >
-                Dodaj pozycję menu
-            </Button>
+            {showAddMenuItemForm && currentParentId === null ? (
+                <AddMenuItemForm
+                    parentId={null}
+                    addMenuItem={addMenuItem}
+                    showAddMenuItemForm={showAddMenuItemForm}
+                    setShowAddMenuItemForm={setShowAddMenuItemForm}
+                />
+            ) : (
+                <Button
+                    className="w-fit"
+                    onClick={() => {
+                        setCurrentParentId(null)
+                        setShowAddMenuItemForm(true)
+                    }}
+                >
+                    Dodaj pozycję menu
+                </Button>
+            )}
         </div>
     )
 }
