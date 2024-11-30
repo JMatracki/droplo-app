@@ -1,13 +1,21 @@
 import Image from 'next/image'
 import React from 'react'
-import searchIcon from '../../icons/search-lg.svg'
+import searchIcon from '../icons/search-lg.svg'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import { AddMenuFormFields } from './validator'
-import { Button } from '../Button'
+import { Button } from './Button'
+import { z } from 'zod'
+
+export const AddMenuItemFormSchema = z.object({
+    name: z.string(),
+    url: z.string().url().optional(),
+})
+
+export type AddMenuFormFields = z.infer<typeof AddMenuItemFormSchema>
 
 interface IAddMenuItemFormProps {
     setShowAddMenuItemForm: React.Dispatch<React.SetStateAction<boolean>>
 }
+
 const AddMenuItemForm = ({ setShowAddMenuItemForm }: IAddMenuItemFormProps) => {
     const {
         register,
@@ -19,14 +27,14 @@ const AddMenuItemForm = ({ setShowAddMenuItemForm }: IAddMenuItemFormProps) => {
             url: '',
         },
     })
-
+    console.log(errors)
     const onSubmit: SubmitHandler<AddMenuFormFields> = (data) =>
         console.log(data)
-    console.log(errors)
+
     return (
         <>
             <form
-                className="flex flex-col gap-4 p-4 border rounded-md shadow-md w-full"
+                className="flex w-full flex-col gap-4 rounded-md border p-4 shadow-md"
                 onSubmit={handleSubmit(onSubmit)}
             >
                 <label htmlFor="Nazwa">Nazwa</label>
@@ -34,13 +42,13 @@ const AddMenuItemForm = ({ setShowAddMenuItemForm }: IAddMenuItemFormProps) => {
                     id="Nazwa"
                     type="text"
                     placeholder="np. Promocje"
-                    className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-purple-400"
+                    className="w-full rounded-md border px-4 py-2 focus:ring-2 focus:ring-purple-400"
                     {...register('name')}
                 />
                 <label htmlFor="Link">Link</label>
                 <div className="relative">
                     <Image
-                        className="absolute left-3 top-1/2 transform -translate-y-1/2"
+                        className="absolute left-3 top-1/2 -translate-y-1/2 transform"
                         src={searchIcon}
                         alt="search icon"
                     />
@@ -48,11 +56,11 @@ const AddMenuItemForm = ({ setShowAddMenuItemForm }: IAddMenuItemFormProps) => {
                         id="Link"
                         type="text"
                         placeholder="Wklej lub wyszukaj"
-                        className="w-full px-4 pl-10 py-2 border rounded-md focus:ring-2 focus:ring-purple-400"
+                        className="w-full rounded-md border px-4 py-2 pl-10 focus:ring-2 focus:ring-purple-400"
                         {...register('url')}
                     />
                 </div>
-                <div className="flex gap-4 w-full">
+                <div className="flex w-full gap-4">
                     <Button onClick={() => setShowAddMenuItemForm(false)}>
                         Anuluj
                     </Button>

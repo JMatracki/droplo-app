@@ -1,14 +1,21 @@
 import React from 'react'
+import EmptyMenu from './EmptyMenu'
 
 export interface IMenuFormFields {
+    id: string
     name: string
     url?: string
     subLinks?: IMenuFormFields[]
 }
 
-export const MenuItem = ({ menuItems }: { menuItems: IMenuFormFields[] }) => {
+interface MenuItemsProps {
+    menuItems: IMenuFormFields[]
+    setShowAddMenuItemForm: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+const MenuItem = ({ menuItems }: { menuItems: IMenuFormFields[] }) => {
     return (
-        <div>
+        <>
             {menuItems.map((el) => {
                 return (
                     <div key={el.name}>
@@ -24,6 +31,22 @@ export const MenuItem = ({ menuItems }: { menuItems: IMenuFormFields[] }) => {
                     </div>
                 )
             })}
-        </div>
+        </>
+    )
+}
+
+export const MenuItems = ({
+    menuItems,
+    setShowAddMenuItemForm,
+}: MenuItemsProps) => {
+    console.log(menuItems)
+    return (
+        <>
+            {menuItems.length > 0 ? (
+                <MenuItem menuItems={menuItems} />
+            ) : (
+                <EmptyMenu setShowAddMenuItemForm={setShowAddMenuItemForm} />
+            )}
+        </>
     )
 }
