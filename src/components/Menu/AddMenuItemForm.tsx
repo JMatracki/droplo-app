@@ -133,7 +133,9 @@ const AddMenuItemForm = ({
                         <Button type="button" onClick={() => closeForm()}>
                             Anuluj
                         </Button>
-                        <Button variant={'secondary'}>Dodaj</Button>
+                        <Button variant={'secondary'}>
+                            {editingItem ? 'Zapisz' : 'Dodaj'}
+                        </Button>
                     </div>
                 </form>
             )}
