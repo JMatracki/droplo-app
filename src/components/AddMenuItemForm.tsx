@@ -6,10 +6,11 @@ import { Button } from './Button'
 import { z } from 'zod'
 import { IMenuFormFields } from './MenuItems'
 import { v4 as uuidv4 } from 'uuid'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 export const AddMenuItemFormSchema = z.object({
-    name: z.string(),
-    url: z.string().url().optional(),
+    name: z.string().min(1, { message: 'Nazwa jest wymagana' }),
+    url: z.string().url({ message: 'Podaj prawidłowy adres URL' }).optional(),
 })
 
 export type AddMenuFormFields = z.infer<typeof AddMenuItemFormSchema>
@@ -32,14 +33,14 @@ const AddMenuItemForm = ({
         handleSubmit,
         formState: { errors },
     } = useForm<AddMenuFormFields>({
+        resolver: zodResolver(AddMenuItemFormSchema),
         defaultValues: {
             name: '',
             url: '',
         },
     })
+
     console.log(errors)
-    console.log('parentId', parentId)
-    console.log('addMenuItem', addMenuItem)
 
     const onSubmit: SubmitHandler<AddMenuFormFields> = (data) => {
         const newItem = {
@@ -57,34 +58,52 @@ const AddMenuItemForm = ({
         <>
             {showAddMenuItemForm && (
                 <form
-                    className="flex w-full flex-col gap-4 rounded-md border p-4 shadow-md"
+                    className="flex w-full flex-col gap-1 rounded-md border p-4 shadow-md"
                     onSubmit={handleSubmit(onSubmit)}
                 >
-                    <label htmlFor="Nazwa">Nazwa</label>
-                    <input
-                        id="Nazwa"
-                        type="text"
-                        placeholder="np. Promocje"
-                        className="w-full rounded-md border px-4 py-2 focus:ring-2 focus:ring-purple-400"
-                        {...register('name')}
-                    />
-                    <label htmlFor="Link">Link</label>
-                    <div className="relative">
-                        <Image
-                            className="absolute left-3 top-1/2 -translate-y-1/2 transform"
-                            src={searchIcon}
-                            alt="search icon"
-                        />
+                    <div>
+                        <label htmlFor="name">Nazwa</label>
                         <input
-                            id="Link"
+                            id="name"
                             type="text"
-                            placeholder="Wklej lub wyszukaj"
-                            className="w-full rounded-md border px-4 py-2 pl-10 focus:ring-2 focus:ring-purple-400"
-                            {...register('url')}
+                            placeholder="np. Promocje"
+                            className="w-full rounded-md border px-4 py-2 focus:ring-2 focus:ring-purple-400"
+                            {...register('name')}
                         />
+                        <div className="min-h-6">
+                            <span className="text-sm text-red-500">
+                                {errors.name && errors.name.message}
+                            </span>
+                        </div>
                     </div>
+                    <div>
+                        <label htmlFor="link">Link</label>
+                        <div className="relative">
+                            <Image
+                                className="absolute left-3 top-1/2 -translate-y-1/2 transform"
+                                src={searchIcon}
+                                alt="search icon"
+                            />
+                            <input
+                                id="link"
+                                type="text"
+                                placeholder="Wklej lub wyszukaj"
+                                className="w-full rounded-md border px-4 py-2 pl-10 focus:ring-2 focus:ring-purple-400"
+                                {...register('url')}
+                            />
+                        </div>
+                        <div className="min-h-6">
+                            <span className="text-sm text-red-500">
+                                {errors.url && errors.url.message}
+                            </span>
+                        </div>
+                    </div>
+
                     <div className="flex w-full gap-4">
-                        <Button onClick={() => setShowAddMenuItemForm(false)}>
+                        <Button
+                            type="button"
+                            onClick={() => setShowAddMenuItemForm(false)}
+                        >
                             Anuluj
                         </Button>
                         <Button variant={'secondary'}>Dodaj</Button>

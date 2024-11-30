@@ -8,7 +8,7 @@ interface IEmptyMenuProps {
 
 const EmptyMenu = ({ setShowAddMenuItemForm }: IEmptyMenuProps) => {
     return (
-        <div className="flex w-full flex-col items-center justify-center gap-6 border border-[#F9FAFB] bg-[#F9FAFB] py-10 text-center">
+        <div className="flex w-full flex-col items-center justify-center gap-6 rounded-lg border py-10 text-center">
             <div>
                 <h2 className="text-lg font-bold text-gray-800">
                     Menu jest puste
