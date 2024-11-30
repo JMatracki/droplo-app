@@ -15,6 +15,7 @@ const MenuItem = ({
     openForm,
     closeForm,
     addMenuItem,
+    editMenuItem,
     deleteMenuItem,
 }: MenuItemProps) => {
     return (
@@ -41,7 +42,15 @@ const MenuItem = ({
                                 >
                                     Usuń
                                 </Button>
-                                <Button className="rounded-l-none rounded-r-none border-b-0 border-t-0 focus-within:rounded-lg">
+                                <Button
+                                    className="rounded-l-none rounded-r-none border-b-0 border-t-0 focus-within:rounded-lg"
+                                    onClick={() =>
+                                        openForm({
+                                            parentId: null,
+                                            editingId: item.id,
+                                        })
+                                    }
+                                >
                                     Edytuj
                                 </Button>
                                 <Button
@@ -49,6 +58,7 @@ const MenuItem = ({
                                     onClick={() => {
                                         openForm({
                                             parentId: item.id,
+                                            editingId: null,
                                         })
                                     }}
                                 >
@@ -65,15 +75,20 @@ const MenuItem = ({
                                     openForm={openForm}
                                     closeForm={closeForm}
                                     addMenuItem={addMenuItem}
+                                    editMenuItem={editMenuItem}
                                     deleteMenuItem={deleteMenuItem}
                                     className="pl-16"
                                 />
                             </div>
                         ) : null}
-                        {formState.parentId === item.id &&
-                            formState.isVisible && (
+                        {formState.isVisible &&
+                            (formState.parentId === item.id ||
+                                formState.editingId === item.id) && (
                                 <AddMenuItemForm
+                                    key={`${formState.parentId || ''}-${formState.editingId || ''}`}
                                     addMenuItem={addMenuItem}
+                                    editMenuItem={editMenuItem}
+                                    menuItems={menuItems}
                                     formState={formState}
                                     closeForm={closeForm}
                                 />

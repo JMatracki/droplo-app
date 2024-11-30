@@ -21,7 +21,7 @@ const EmptyMenu = ({ openForm }: IEmptyMenuProps) => {
             <Button
                 variant={'primary'}
                 onClick={() => {
-                    openForm({ parentId: null })
+                    openForm({ parentId: null, editingId: null })
                 }}
             >
                 <Image src={plusIcon} alt="plus icon" />

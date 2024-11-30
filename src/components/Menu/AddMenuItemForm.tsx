@@ -6,7 +6,13 @@ import { Button } from '../Button'
 import { z } from 'zod'
 import { v4 as uuidv4 } from 'uuid'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ICloseForm, IFormState, IMenuFormFields } from '@/types/form'
+import {
+    IAddMenuItem,
+    ICloseForm,
+    IEditMenuItem,
+    IFormState,
+    IMenuFormFields,
+} from '@/types/form'
 
 export const AddMenuItemFormSchema = z.object({
     name: z.string().min(1, { message: 'Nazwa jest wymagana' }),
@@ -17,15 +23,25 @@ export type AddMenuFormFields = z.infer<typeof AddMenuItemFormSchema>
 
 interface IAddMenuItemFormProps {
     formState: IFormState
-    addMenuItem: (newItem: IMenuFormFields, parentId: string | null) => void
+    menuItems: IMenuFormFields[]
+    addMenuItem: IAddMenuItem
+    editMenuItem: IEditMenuItem
     closeForm: ICloseForm
 }
 
 const AddMenuItemForm = ({
     formState,
+    menuItems,
     addMenuItem,
+    editMenuItem,
     closeForm,
 }: IAddMenuItemFormProps) => {
+    const { editingId } = formState
+
+    const editingItem = editingId
+        ? menuItems.find((item) => item.id === editingId) || null
+        : null
+
     const {
         register,
         handleSubmit,
@@ -33,20 +49,29 @@ const AddMenuItemForm = ({
     } = useForm<AddMenuFormFields>({
         resolver: zodResolver(AddMenuItemFormSchema),
         defaultValues: {
-            name: '',
-            url: '',
+            name: editingItem?.name || '',
+            url: editingItem?.url || '',
         },
     })
 
     const onSubmit: SubmitHandler<AddMenuFormFields> = (data) => {
-        const newItem = {
-            id: uuidv4(),
-            name: data.name,
-            url: data.url || '',
-            subLinks: [],
+        if (editingId) {
+            editMenuItem({
+                id: editingId,
+                name: data.name,
+                url: data.url || '',
+            })
+        } else {
+            const newItem = {
+                id: uuidv4(),
+                name: data.name,
+                url: data.url || '',
+                subLinks: [],
+            }
+
+            addMenuItem(newItem, formState.parentId)
         }
 
-        addMenuItem(newItem, formState.parentId)
         closeForm()
     }
 

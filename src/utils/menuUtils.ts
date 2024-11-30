@@ -28,6 +28,26 @@ export const addItemToMenu = (
     })
 }
 
+export const editMenuItem = (
+    items: IMenuFormFields[],
+    updatedItem: IMenuFormFields
+): IMenuFormFields[] => {
+    return items.map((item) => {
+        if (item.id === updatedItem.id) {
+            return { ...item, ...updatedItem }
+        }
+
+        if (item.subLinks) {
+            return {
+                ...item,
+                subLinks: editMenuItem(item.subLinks, updatedItem),
+            }
+        }
+
+        return item
+    })
+}
+
 export const deleteItemFromMenu = (
     items: IMenuFormFields[],
     itemId: string

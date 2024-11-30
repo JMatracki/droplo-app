@@ -1,14 +1,19 @@
 import { MenuItems } from '@/components/Menu/MenuItems'
-import { IMenuFormFields } from '@/types/form'
-import { addItemToMenu, deleteItemFromMenu } from '@/utils/menuUtils'
+import { IFormState, IMenuFormFields } from '@/types/form'
+import {
+    addItemToMenu,
+    deleteItemFromMenu,
+    editMenuItem,
+} from '@/utils/menuUtils'
 import { useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 
 export default function Home() {
-    const [formState, setFormState] = useState<{
-        isVisible: boolean
-        parentId: string | null
-    }>({ isVisible: false, parentId: null })
+    const [formState, setFormState] = useState<IFormState>({
+        isVisible: false,
+        parentId: null,
+        editingId: null,
+    })
     const [menuItems, setMenuItems] = useState<IMenuFormFields[]>([
         {
             id: uuidv4(),
@@ -45,16 +50,30 @@ export default function Home() {
         setMenuItems((prevItems) => addItemToMenu(prevItems, newItem, parentId))
     }
 
+    const editMenuItemInState = (updatedItem: IMenuFormFields) => {
+        setMenuItems((prevItems) => editMenuItem(prevItems, updatedItem))
+    }
+
     const deleteMenuItem = (itemId: string) => {
         setMenuItems((prevItems) => deleteItemFromMenu(prevItems, itemId))
     }
 
-    const openForm = ({ parentId }: { parentId: string | null }) => {
-        setFormState({ isVisible: true, parentId })
+    const openForm = ({
+        parentId,
+        editingId,
+    }: {
+        parentId: string | null
+        editingId?: string | null
+    }) => {
+        setFormState({
+            isVisible: true,
+            parentId,
+            editingId: editingId || null,
+        })
     }
 
     const closeForm = () => {
-        setFormState({ isVisible: false, parentId: null })
+        setFormState({ isVisible: false, parentId: null, editingId: null })
     }
 
     return (
@@ -69,6 +88,7 @@ export default function Home() {
                     closeForm={closeForm}
                     addMenuItem={addMenuItem}
                     deleteMenuItem={deleteMenuItem}
+                    editMenuItem={editMenuItemInState}
                 />
             </main>
         </div>

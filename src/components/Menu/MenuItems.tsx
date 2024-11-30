@@ -6,6 +6,7 @@ import {
     IAddMenuItem,
     ICloseForm,
     IDeleteMenuItem,
+    IEditMenuItem,
     IFormState,
     IMenuFormFields,
     IOpenForm,
@@ -19,6 +20,7 @@ export interface MenuItemsProps {
     formState: IFormState
     addMenuItem: IAddMenuItem
     deleteMenuItem: IDeleteMenuItem
+    editMenuItem: IEditMenuItem
 }
 
 export const MenuItems = ({
@@ -27,6 +29,7 @@ export const MenuItems = ({
     closeForm,
     formState,
     addMenuItem,
+    editMenuItem,
     deleteMenuItem,
 }: MenuItemsProps) => {
     return (
@@ -37,15 +40,16 @@ export const MenuItems = ({
                         <MenuItem
                             menuItems={menuItems}
                             formState={formState}
-                            addMenuItem={addMenuItem}
                             openForm={openForm}
                             closeForm={closeForm}
+                            addMenuItem={addMenuItem}
+                            editMenuItem={editMenuItem}
                             deleteMenuItem={deleteMenuItem}
                         />
                         <Button
-                            className={`w-fit ${formState.isVisible && formState.parentId === null ? 'hidden' : ''}`}
+                            className={`w-fit ${formState.isVisible && formState.parentId === null && formState.editingId === null ? 'hidden' : ''}`}
                             onClick={() => {
-                                openForm({ parentId: null })
+                                openForm({ parentId: null, editingId: null })
                             }}
                         >
                             Dodaj pozycję menu
@@ -54,13 +58,17 @@ export const MenuItems = ({
                 ) : (
                     <EmptyMenu openForm={openForm} />
                 )}
-                {formState.isVisible && formState.parentId === null && (
-                    <AddMenuItemForm
-                        formState={formState}
-                        addMenuItem={addMenuItem}
-                        closeForm={closeForm}
-                    />
-                )}
+                {formState.isVisible &&
+                    formState.parentId === null &&
+                    formState.editingId === null && (
+                        <AddMenuItemForm
+                            formState={formState}
+                            addMenuItem={addMenuItem}
+                            editMenuItem={editMenuItem}
+                            closeForm={closeForm}
+                            menuItems={menuItems}
+                        />
+                    )}
             </div>
         </div>
     )
