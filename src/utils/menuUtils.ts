@@ -1,10 +1,14 @@
 import { IMenuFormFields } from '@/types/form'
 
-export const addItemToMenu = (
-    items: IMenuFormFields[],
-    newItem: IMenuFormFields,
+export const addItemToMenu = ({
+    items,
+    newItem,
+    parentId,
+}: {
+    items: IMenuFormFields[]
+    newItem: IMenuFormFields
     parentId: string | null
-): IMenuFormFields[] => {
+}): IMenuFormFields[] => {
     if (!parentId) {
         return [...items, newItem]
     }
@@ -20,7 +24,11 @@ export const addItemToMenu = (
         if (item.subLinks) {
             return {
                 ...item,
-                subLinks: addItemToMenu(item.subLinks, newItem, parentId),
+                subLinks: addItemToMenu({
+                    items: item.subLinks,
+                    newItem,
+                    parentId,
+                }),
             }
         }
 
@@ -28,10 +36,13 @@ export const addItemToMenu = (
     })
 }
 
-export const editMenuItem = (
-    items: IMenuFormFields[],
+export const editItemInMenu = ({
+    items,
+    updatedItem,
+}: {
+    items: IMenuFormFields[]
     updatedItem: IMenuFormFields
-): IMenuFormFields[] => {
+}): IMenuFormFields[] => {
     return items.map((item) => {
         if (item.id === updatedItem.id) {
             return { ...item, ...updatedItem }
@@ -40,7 +51,7 @@ export const editMenuItem = (
         if (item.subLinks) {
             return {
                 ...item,
-                subLinks: editMenuItem(item.subLinks, updatedItem),
+                subLinks: editItemInMenu({ items: item.subLinks, updatedItem }),
             }
         }
 
@@ -48,16 +59,19 @@ export const editMenuItem = (
     })
 }
 
-export const deleteItemFromMenu = (
-    items: IMenuFormFields[],
+export const deleteItemFromMenu = ({
+    items,
+    itemId,
+}: {
+    items: IMenuFormFields[]
     itemId: string
-): IMenuFormFields[] => {
+}): IMenuFormFields[] => {
     return items
         .filter((item) => item.id !== itemId)
         .map((item) => ({
             ...item,
             subLinks: item.subLinks
-                ? deleteItemFromMenu(item.subLinks, itemId)
+                ? deleteItemFromMenu({ items: item.subLinks, itemId })
                 : [],
         }))
 }

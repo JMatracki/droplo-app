@@ -1,12 +1,19 @@
 import { MenuItems } from '@/components/Menu/MenuItems'
-import { IFormState, IMenuFormFields } from '@/types/form'
+import {
+    IAddMenuItem,
+    IDeleteMenuItem,
+    IEditMenuItem,
+    IFormState,
+    IMenuFormFields,
+    IOpenForm,
+} from '@/types/form'
+import { INITIAL_MENU_ITEMS } from '@/utils/constants'
 import {
     addItemToMenu,
     deleteItemFromMenu,
-    editMenuItem,
+    editItemInMenu,
 } from '@/utils/menuUtils'
 import { useState } from 'react'
-import { v4 as uuidv4 } from 'uuid'
 
 export default function Home() {
     const [formState, setFormState] = useState<IFormState>({
@@ -14,61 +21,32 @@ export default function Home() {
         parentId: null,
         editingId: null,
     })
-    const [menuItems, setMenuItems] = useState<IMenuFormFields[]>([
-        {
-            id: uuidv4(),
-            name: 'Promocje',
-            url: 'https://rc32141.redcart.pl/promocje',
-            subLinks: [
-                {
-                    id: uuidv4(),
-                    name: 'Ostatnie 7 dni',
-                    url: 'https://rc32141.redcart.pl/7dni',
-                    subLinks: [
-                        {
-                            id: uuidv4(),
-                            name: 'Popularne',
-                            url: 'https://rc32141.redcart.pl/popularne',
-                        },
-                        {
-                            id: uuidv4(),
-                            name: 'Najlepsze',
-                            url: 'https://rc32141.redcart.pl/najlepsze',
-                        },
-                    ],
-                },
-            ],
-        },
-        {
-            id: uuidv4(),
-            name: 'Diamenty forbesa',
-            url: 'https://www.forbes.pl/diamenty',
-        },
-    ])
+    const [menuItems, setMenuItems] =
+        useState<IMenuFormFields[]>(INITIAL_MENU_ITEMS)
 
-    const addMenuItem = (newItem: IMenuFormFields, parentId: string | null) => {
-        setMenuItems((prevItems) => addItemToMenu(prevItems, newItem, parentId))
+    const addMenuItem: IAddMenuItem = ({ newItem, parentId }) => {
+        setMenuItems((prevItems) =>
+            addItemToMenu({ items: prevItems, newItem, parentId })
+        )
     }
 
-    const editMenuItemInState = (updatedItem: IMenuFormFields) => {
-        setMenuItems((prevItems) => editMenuItem(prevItems, updatedItem))
+    const editMenuItemInState: IEditMenuItem = ({ updatedItem }) => {
+        setMenuItems((prevItems) =>
+            editItemInMenu({ items: prevItems, updatedItem })
+        )
     }
 
-    const deleteMenuItem = (itemId: string) => {
-        setMenuItems((prevItems) => deleteItemFromMenu(prevItems, itemId))
+    const deleteMenuItem: IDeleteMenuItem = ({ itemId }) => {
+        setMenuItems((prevItems) =>
+            deleteItemFromMenu({ items: prevItems, itemId })
+        )
     }
 
-    const openForm = ({
-        parentId,
-        editingId,
-    }: {
-        parentId: string | null
-        editingId?: string | null
-    }) => {
+    const openForm: IOpenForm = ({ parentId, editingId }) => {
         setFormState({
             isVisible: true,
             parentId,
-            editingId: editingId || null,
+            editingId,
         })
     }
 

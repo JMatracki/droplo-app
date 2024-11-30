@@ -38,7 +38,9 @@ const MenuItem = ({
                             <div className="w-fil h-fit rounded-lg border">
                                 <Button
                                     className="border-none"
-                                    onClick={() => deleteMenuItem(item.id)}
+                                    onClick={() =>
+                                        deleteMenuItem({ itemId: item.id })
+                                    }
                                 >
                                     Usuń
                                 </Button>
@@ -66,6 +68,18 @@ const MenuItem = ({
                                 </Button>
                             </div>
                         </div>
+                        {formState.isVisible &&
+                            (formState.parentId === item.id ||
+                                formState.editingId === item.id) && (
+                                <AddMenuItemForm
+                                    key={`${formState.parentId || ''}-${formState.editingId || ''}`}
+                                    addMenuItem={addMenuItem}
+                                    editMenuItem={editMenuItem}
+                                    menuItems={menuItems}
+                                    formState={formState}
+                                    closeForm={closeForm}
+                                />
+                            )}
                         {item.subLinks ? (
                             <div style={{ marginLeft: '10px' }}>
                                 <MenuItem
@@ -81,18 +95,6 @@ const MenuItem = ({
                                 />
                             </div>
                         ) : null}
-                        {formState.isVisible &&
-                            (formState.parentId === item.id ||
-                                formState.editingId === item.id) && (
-                                <AddMenuItemForm
-                                    key={`${formState.parentId || ''}-${formState.editingId || ''}`}
-                                    addMenuItem={addMenuItem}
-                                    editMenuItem={editMenuItem}
-                                    menuItems={menuItems}
-                                    formState={formState}
-                                    closeForm={closeForm}
-                                />
-                            )}
                     </div>
                 )
             })}

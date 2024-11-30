@@ -20,11 +20,18 @@ export interface IMenuFormFields {
     subLinks?: IMenuFormFields[]
 }
 
-export type IAddMenuItem = (
-    newItem: IMenuFormFields,
+export type IAddMenuItem = ({
+    newItem,
+    parentId,
+}: {
+    newItem: IMenuFormFields
     parentId: string | null
-) => void
+}) => void
 
-export type IEditMenuItem = (updatedItem: IMenuFormFields) => void
+export type IEditMenuItem = ({
+    updatedItem,
+}: {
+    updatedItem: IMenuFormFields
+}) => void
 
-export type IDeleteMenuItem = (itemId: string) => void
+export type IDeleteMenuItem = ({ itemId }: { itemId: string }) => void

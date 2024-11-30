@@ -61,9 +61,11 @@ const AddMenuItemForm = ({
     const onSubmit: SubmitHandler<AddMenuFormFields> = (data) => {
         if (editingId) {
             editMenuItem({
-                id: editingId,
-                name: data.name,
-                url: data.url || '',
+                updatedItem: {
+                    id: editingId,
+                    name: data.name,
+                    url: data.url || '',
+                },
             })
         } else {
             const newItem = {
@@ -73,7 +75,10 @@ const AddMenuItemForm = ({
                 subLinks: [],
             }
 
-            addMenuItem(newItem, formState.parentId)
+            addMenuItem({
+                newItem,
+                parentId: formState.parentId,
+            })
         }
 
         closeForm()
