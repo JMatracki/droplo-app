@@ -16,7 +16,11 @@ import {
 
 export const AddMenuItemFormSchema = z.object({
     name: z.string().min(1, { message: 'Nazwa jest wymagana' }),
-    url: z.string().url({ message: 'Podaj prawidłowy adres URL' }).optional(),
+    url: z
+        .string()
+        .url({ message: 'Podaj prawidłowy adres URL' })
+        .optional()
+        .or(z.literal('')),
 })
 
 export type AddMenuFormFields = z.infer<typeof AddMenuItemFormSchema>
