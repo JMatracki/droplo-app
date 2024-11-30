@@ -1,10 +1,9 @@
 import Image from 'next/image'
 import React from 'react'
 import searchIcon from '../../icons/search-lg.svg'
-import ButtonSecondary from '../Buttons/ButtonSecondary'
-import ButtonPrimary from '../Buttons/ButtonPrimary'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { AddMenuFormFields } from './validator'
+import { Button } from '../Button'
 
 interface IAddMenuItemFormProps {
     setShowAddMenuItemForm: React.Dispatch<React.SetStateAction<boolean>>
@@ -54,11 +53,10 @@ const AddMenuItemForm = ({ setShowAddMenuItemForm }: IAddMenuItemFormProps) => {
                     />
                 </div>
                 <div className="flex gap-4 w-full">
-                    <ButtonSecondary
-                        text="Anuluj"
-                        onClick={() => setShowAddMenuItemForm(false)}
-                    />
-                    <ButtonPrimary text="Dodaj" />
+                    <Button onClick={() => setShowAddMenuItemForm(false)}>
+                        Anuluj
+                    </Button>
+                    <Button variant={'secondary'}>Dodaj</Button>
                 </div>
             </form>
         </>

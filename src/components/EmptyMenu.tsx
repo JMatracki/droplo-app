@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import plusIcon from '../icons/plus-circle.svg'
+import { Button } from './Button'
 
 interface IEmptyMenuProps {
     setShowAddMenuItemForm: React.Dispatch<React.SetStateAction<boolean>>
@@ -7,7 +8,7 @@ interface IEmptyMenuProps {
 
 const EmptyMenu = ({ setShowAddMenuItemForm }: IEmptyMenuProps) => {
     return (
-        <div className="flex flex-col items-center justify-center text-center gap-6 py-10 border border-[#F9FAFB] w-full bg-[#F9FAFB]">
+        <div className="flex w-full flex-col items-center justify-center gap-6 border border-[#F9FAFB] bg-[#F9FAFB] py-10 text-center">
             <div>
                 <h2 className="text-lg font-bold text-gray-800">
                     Menu jest puste
@@ -16,15 +17,15 @@ const EmptyMenu = ({ setShowAddMenuItemForm }: IEmptyMenuProps) => {
                     W tym menu nie ma jeszcze żadnych linków.
                 </p>
             </div>
-            <button
-                className="flex items-center justify-center gap-1.5 px-4 py-2 bg-purple-700 text-white rounded-md shadow hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-400"
+            <Button
+                variant={'primary'}
                 onClick={() => {
                     setShowAddMenuItemForm(true)
                 }}
             >
                 <Image src={plusIcon} alt="plus icon" />
                 Dodaj pozycję menu
-            </button>
+            </Button>
         </div>
     )
 }
