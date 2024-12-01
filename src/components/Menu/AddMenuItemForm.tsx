@@ -27,7 +27,7 @@ export type AddMenuFormFields = z.infer<typeof AddMenuItemFormSchema>
 
 interface IAddMenuItemFormProps {
     formState: IFormState
-    menuItems: IMenuFormFields[]
+    editingItem?: IMenuFormFields | null
     addMenuItem: IAddMenuItem
     editMenuItem: IEditMenuItem
     closeForm: ICloseForm
@@ -35,17 +35,11 @@ interface IAddMenuItemFormProps {
 
 const AddMenuItemForm = ({
     formState,
-    menuItems,
+    editingItem,
     addMenuItem,
     editMenuItem,
     closeForm,
 }: IAddMenuItemFormProps) => {
-    const { editingId } = formState
-
-    const editingItem = editingId
-        ? menuItems.find((item) => item.id === editingId) || null
-        : null
-
     const {
         register,
         handleSubmit,
@@ -59,10 +53,10 @@ const AddMenuItemForm = ({
     })
 
     const onSubmit: SubmitHandler<AddMenuFormFields> = (data) => {
-        if (editingId) {
+        if (formState.editingId) {
             editMenuItem({
                 updatedItem: {
-                    id: editingId,
+                    id: formState.editingId,
                     name: data.name,
                     url: data.url || '',
                 },

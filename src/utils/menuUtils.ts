@@ -75,3 +75,24 @@ export const deleteItemFromMenu = ({
                 : [],
         }))
 }
+
+export const findMenuItemById = ({
+    id,
+    menuItems,
+}: {
+    menuItems: IMenuFormFields[]
+    id: string
+}): IMenuFormFields | null => {
+    for (const item of menuItems) {
+        if (item.id === id) {
+            return item
+        }
+        if (item.subLinks) {
+            const found = findMenuItemById({ id, menuItems: item.subLinks })
+            if (found) {
+                return found
+            }
+        }
+    }
+    return null
+}

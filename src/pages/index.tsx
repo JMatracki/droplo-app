@@ -61,10 +61,11 @@ export default function Home() {
             <main className="row-start-2 flex w-full flex-col items-center gap-8 sm:items-start">
                 <MenuItems
                     menuItems={menuItems}
-                    openForm={openForm}
                     formState={formState}
+                    openForm={openForm}
                     closeForm={closeForm}
                     addMenuItem={addMenuItem}
+                    setMenuItems={setMenuItems}
                     deleteMenuItem={deleteMenuItem}
                     editMenuItem={editMenuItemInState}
                 />

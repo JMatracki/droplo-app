@@ -12,8 +12,14 @@ import {
     IOpenForm,
 } from '@/types/form'
 import MenuItem from './MenuItem'
+import { closestCenter, DndContext, DragEndEvent } from '@dnd-kit/core'
+import {
+    arrayMove,
+    SortableContext,
+    verticalListSortingStrategy,
+} from '@dnd-kit/sortable'
 
-export interface MenuItemsProps {
+export interface IMenuItemsProps {
     menuItems: IMenuFormFields[]
     openForm: IOpenForm
     closeForm: ICloseForm
@@ -21,6 +27,7 @@ export interface MenuItemsProps {
     addMenuItem: IAddMenuItem
     deleteMenuItem: IDeleteMenuItem
     editMenuItem: IEditMenuItem
+    setMenuItems: React.Dispatch<React.SetStateAction<IMenuFormFields[]>>
 }
 
 export const MenuItems = ({
@@ -31,45 +38,72 @@ export const MenuItems = ({
     addMenuItem,
     editMenuItem,
     deleteMenuItem,
-}: MenuItemsProps) => {
+    setMenuItems,
+}: IMenuItemsProps) => {
+    const handleDragEnd = (event: DragEndEvent) => {
+        const { active, over } = event
+        if (!over || active.id === over.id) return
+
+        const oldIndex = menuItems.findIndex((item) => item.id === active.id)
+        const newIndex = menuItems.findIndex((item) => item.id === over.id)
+
+        setMenuItems(arrayMove(menuItems, oldIndex, newIndex))
+    }
+
     return (
-        <div className="w-full">
-            <div className="flex w-full flex-col gap-6 rounded-lg border px-8 pb-4 pt-1">
-                {menuItems.length > 0 ? (
-                    <>
-                        <MenuItem
-                            menuItems={menuItems}
-                            formState={formState}
-                            openForm={openForm}
-                            closeForm={closeForm}
-                            addMenuItem={addMenuItem}
-                            editMenuItem={editMenuItem}
-                            deleteMenuItem={deleteMenuItem}
-                        />
-                        <Button
-                            className={`w-fit ${formState.isVisible && formState.parentId === null && formState.editingId === null ? 'hidden' : ''}`}
-                            onClick={() => {
-                                openForm({ parentId: null, editingId: null })
-                            }}
-                        >
-                            Dodaj pozycję menu
-                        </Button>
-                    </>
-                ) : (
-                    <EmptyMenu openForm={openForm} />
-                )}
-                {formState.isVisible &&
-                    formState.parentId === null &&
-                    formState.editingId === null && (
-                        <AddMenuItemForm
-                            formState={formState}
-                            addMenuItem={addMenuItem}
-                            editMenuItem={editMenuItem}
-                            closeForm={closeForm}
-                            menuItems={menuItems}
-                        />
-                    )}
-            </div>
-        </div>
+        <DndContext
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+        >
+            <SortableContext
+                items={menuItems.map((item) => item.id)}
+                strategy={verticalListSortingStrategy}
+            >
+                <div className="w-full">
+                    <div className="flex w-full flex-col gap-6 rounded-lg border px-8 pb-4 pt-1">
+                        {menuItems.length > 0 ? (
+                            <>
+                                {menuItems.map((item) => (
+                                    <MenuItem
+                                        key={item.id}
+                                        item={item}
+                                        menuItems={menuItems}
+                                        formState={formState}
+                                        openForm={openForm}
+                                        closeForm={closeForm}
+                                        addMenuItem={addMenuItem}
+                                        editMenuItem={editMenuItem}
+                                        deleteMenuItem={deleteMenuItem}
+                                    />
+                                ))}
+                                <Button
+                                    className={`w-fit ${formState.isVisible && formState.parentId === null && formState.editingId === null ? 'hidden' : ''}`}
+                                    onClick={() => {
+                                        openForm({
+                                            parentId: null,
+                                            editingId: null,
+                                        })
+                                    }}
+                                >
+                                    Dodaj pozycję menu
+                                </Button>
+                            </>
+                        ) : (
+                            <EmptyMenu openForm={openForm} />
+                        )}
+                        {formState.isVisible &&
+                            formState.parentId === null &&
+                            formState.editingId === null && (
+                                <AddMenuItemForm
+                                    formState={formState}
+                                    addMenuItem={addMenuItem}
+                                    editMenuItem={editMenuItem}
+                                    closeForm={closeForm}
+                                />
+                            )}
+                    </div>
+                </div>
+            </SortableContext>
+        </DndContext>
     )
 }
