@@ -14,6 +14,12 @@ import {
     editItemInMenu,
 } from '@/utils/menuUtils'
 import { useState } from 'react'
+import { Inter } from 'next/font/google';
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+});
 
 export default function Home() {
     const [formState, setFormState] = useState<IFormState>({
@@ -56,7 +62,7 @@ export default function Home() {
 
     return (
         <div
-            className={`grid min-h-screen grid-rows-[20px_1fr_20px] justify-items-center gap-16 p-8 pb-20 pt-20 font-[family-name:var(--font-geist-sans)] sm:p-20`}
+            className={`grid min-h-screen grid-rows-[20px_1fr_20px] justify-items-center gap-16 p-8 pb-20 pt-20 sm:p-20 ${inter.variable} font-sans`}
         >
             <main className="row-start-2 flex w-full flex-col items-center gap-8 sm:items-start">
                 <MenuItems

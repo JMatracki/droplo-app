@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import { Button } from '../Button'
 import AddMenuItemForm from './AddMenuItemForm'
-import searchIcon from '@/icons/search-lg.svg'
+import moveIcon from '@/icons/move.svg'
 import {
     IAddMenuItem,
     ICloseForm,
@@ -60,7 +60,7 @@ const MenuItem = ({
                 <div className="flex items-center gap-3">
                     <Image
                         className="h-6 w-6"
-                        src={searchIcon}
+                        src={moveIcon}
                         alt="search icon"
                     />
                     <div className="flex flex-col gap-1">
