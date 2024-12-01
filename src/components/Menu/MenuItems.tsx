@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useId } from 'react'
 import EmptyMenu from './EmptyMenu'
 import { Button } from '../Button'
 import AddMenuItemForm from './AddMenuItemForm'
@@ -12,12 +12,15 @@ import {
     IOpenForm,
 } from '@/types/form'
 import MenuItem from './MenuItem'
-import { closestCenter, DndContext, DragEndEvent } from '@dnd-kit/core'
 import {
-    arrayMove,
-    SortableContext,
-    verticalListSortingStrategy,
-} from '@dnd-kit/sortable'
+    DndContext,
+    DragEndEvent,
+    PointerSensor,
+    useSensor,
+    useSensors,
+} from '@dnd-kit/core'
+import { SortableContext } from '@dnd-kit/sortable'
+import { moveItemInTree } from '@/utils/menuUtils'
 
 export interface IMenuItemsProps {
     menuItems: IMenuFormFields[]
@@ -40,25 +43,32 @@ export const MenuItems = ({
     deleteMenuItem,
     setMenuItems,
 }: IMenuItemsProps) => {
+    const id = useId()
+
+    const sensors = useSensors(
+        useSensor(PointerSensor, {
+            activationConstraint: {
+                distance: 5,
+            },
+        })
+    )
+
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event
         if (!over || active.id === over.id) return
 
-        const oldIndex = menuItems.findIndex((item) => item.id === active.id)
-        const newIndex = menuItems.findIndex((item) => item.id === over.id)
+        const updatedItems = moveItemInTree({
+            items: menuItems,
+            activeId: active.id,
+            overId: over.id,
+        })
 
-        setMenuItems(arrayMove(menuItems, oldIndex, newIndex))
+        setMenuItems(updatedItems)
     }
 
     return (
-        <DndContext
-            collisionDetection={closestCenter}
-            onDragEnd={handleDragEnd}
-        >
-            <SortableContext
-                items={menuItems.map((item) => item.id)}
-                strategy={verticalListSortingStrategy}
-            >
+        <DndContext id={id} sensors={sensors} onDragEnd={handleDragEnd}>
+            <SortableContext items={menuItems.map((item) => item.id)}>
                 <div className="w-full">
                     <div className="flex w-full flex-col gap-6 rounded-lg border px-8 pb-4 pt-1">
                         {menuItems.length > 0 ? (

@@ -12,6 +12,7 @@ import {
     IOpenForm,
 } from '@/types/form'
 import { findMenuItemById } from '@/utils/menuUtils'
+import { useSortable } from '@dnd-kit/sortable'
 
 export interface IMenuItemProps {
     menuItems: IMenuFormFields[]
@@ -39,9 +40,22 @@ const MenuItem = ({
     const editingItem = formState.editingId
         ? findMenuItemById({ id: formState.editingId, menuItems })
         : null
+    const { attributes, listeners, setNodeRef, isOver } = useSortable({
+        id: item.id,
+    })
+    const style = {
+        color: isOver ? 'green' : undefined,
+        backgroundColor: isOver ? '#f7fafc' : undefined,
+    }
 
     return (
-        <div className={`${className}`}>
+        <div
+            ref={setNodeRef}
+            {...attributes}
+            {...listeners}
+            style={style}
+            className={`${className}`}
+        >
             <div className="flex justify-between py-4">
                 <div className="flex items-center gap-3">
                     <Image
