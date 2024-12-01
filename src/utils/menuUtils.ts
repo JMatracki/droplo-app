@@ -159,3 +159,26 @@ const insertItem = (
         return item
     })
 }
+
+export const isDescendant = ({
+    parentId,
+    childId,
+    menuItems,
+}: {
+    parentId: string
+    childId: UniqueIdentifier
+    menuItems: IMenuFormFields[]
+}): boolean => {
+    const parentItem = findMenuItemById({ id: parentId, menuItems })
+    if (!parentItem || !parentItem.subLinks) return false
+
+    return parentItem.subLinks.some(
+        (subItem) =>
+            subItem.id === childId ||
+            isDescendant({
+                parentId: subItem.id,
+                childId,
+                menuItems,
+            })
+    )
+}

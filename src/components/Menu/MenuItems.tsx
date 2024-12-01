@@ -20,7 +20,7 @@ import {
     useSensors,
 } from '@dnd-kit/core'
 import { SortableContext } from '@dnd-kit/sortable'
-import { moveItemInTree } from '@/utils/menuUtils'
+import { isDescendant, moveItemInTree } from '@/utils/menuUtils'
 
 export interface IMenuItemsProps {
     menuItems: IMenuFormFields[]
@@ -56,6 +56,17 @@ export const MenuItems = ({
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event
         if (!over || active.id === over.id) return
+
+        if (
+            isDescendant({
+                parentId: active.id as string,
+                childId: over.id,
+                menuItems,
+            })
+        ) {
+            alert('Cannot drop a parent into its own child.')
+            return
+        }
 
         const updatedItems = moveItemInTree({
             items: menuItems,
