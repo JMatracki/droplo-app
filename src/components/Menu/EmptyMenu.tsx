@@ -1,5 +1,7 @@
 import { Button } from '../Button'
 import { IOpenForm } from '@/types/form'
+import plusIcon from '@/icons/plus-circle.svg'
+import Image from 'next/image'
 
 interface IEmptyMenuProps {
     openForm: IOpenForm
@@ -22,7 +24,7 @@ const EmptyMenu = ({ openForm }: IEmptyMenuProps) => {
                     openForm({ parentId: null, editingId: null })
                 }}
             >
-                {/* <Image src={plusIcon} alt="plus icon" /> */}
+                <Image src={plusIcon} alt="plus icon" />
                 Dodaj pozycję menu
             </Button>
         </div>

@@ -7,6 +7,7 @@ const config: Config = {
     },
     transform: {
         '^.+\\.(ts|tsx|js|jsx)$': 'babel-jest',
+        '^.+\\.svg$': '<rootDir>/svgTransform.js',
     },
     testEnvironment: 'jsdom',
     setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
