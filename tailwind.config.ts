@@ -1,5 +1,4 @@
 import type { Config } from 'tailwindcss'
-import { fontFamily } from 'tailwindcss/defaultTheme';
 
 export default {
     content: [
@@ -27,7 +26,7 @@ export default {
                 foreground: 'var(--foreground)',
             },
             fontFamily: {
-                sans: ['var(--font-inter)', ...fontFamily.sans],
+                sans: ['Inter', 'sans-serif'],
               },
         },
     },
