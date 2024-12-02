@@ -123,7 +123,7 @@ const AddMenuItemForm = ({
                         </div>
                     </div>
 
-                    <div className="flex w-full gap-4">
+                    <div className="flex w-full gap-2.5">
                         <Button type="button" onClick={() => closeForm()}>
                             Anuluj
                         </Button>
